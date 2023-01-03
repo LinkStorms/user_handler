@@ -5,7 +5,7 @@ from werkzeug.exceptions import HTTPException
 import requests
 
 from settings import HOST, PORT, ACCESS_TOKEN_BYTE_SIZE
-from communications import login, register
+from communications import login, register, add_service_token
 from utilities import (
     store_token,
     return_token_if_exists,
@@ -119,6 +119,25 @@ def register_endpoint():
 
     response = register(username, password, email)
 
+    return response, response["code"]
+
+
+@app.route("/add_service_token", methods=["POST"])
+def add_service_token_endpoint():
+    access_token = request.json.get("access_token", "")
+    service_name = request.json.get("service_name", "")
+    service_token = request.json.get("service_token", "")
+
+    try:
+        user_id = check_token(access_token)
+    except Exception as e:
+        return {
+            "code": 401,
+            "data": {},
+            "errors": [str(e)],
+        }, 401
+    
+    response = add_service_token(user_id, service_token, service_name)
     return response, response["code"]
 
 
