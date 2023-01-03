@@ -6,7 +6,7 @@ import requests
 
 from settings import HOST, PORT, ACCESS_TOKEN_BYTE_SIZE
 from communications import login
-from utilities import store_token
+from utilities import store_token, return_token_if_exists
 
 app = Flask(__name__)
 
@@ -38,7 +38,13 @@ def access_token_endpoint():
 
     if status_code == 200:
         user_id = response["data"]["user_id"]
-        
+        existing_token = return_token_if_exists(user_id)
+        if existing_token:
+            response["data"] = {
+                "user_id": user_id,
+                "access_token": existing_token
+            }
+            return response, status_code
         access_token = token_hex(ACCESS_TOKEN_BYTE_SIZE)
         store_token(user_id, access_token)
         response["data"] = {

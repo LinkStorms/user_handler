@@ -26,3 +26,11 @@ def is_data_layer_reachable():
 def store_token(user_id, access_token, db_path=DB_PATH):
     with dbm.open(db_path, "c") as db:
         db[access_token] = str(user_id)
+
+
+def return_token_if_exists(user_id, db_path=DB_PATH):
+    with dbm.open(db_path, "c") as db:
+        for token in db.keys():
+            if db[token].decode("utf-8") == str(user_id):
+                return token.decode("utf-8")
+    return None
