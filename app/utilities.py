@@ -41,3 +41,11 @@ def delete_token(user_id, db_path=DB_PATH):
         for token in db.keys():
             if db[token].decode("utf-8") == str(user_id):
                 del db[token]
+
+
+def check_token(token, db_path=DB_PATH):
+    with dbm.open(db_path, "c") as db:
+        try:
+            return db[token].decode("utf-8")
+        except KeyError:
+            raise Exception("Invalid access token")

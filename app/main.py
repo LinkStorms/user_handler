@@ -10,6 +10,7 @@ from utilities import (
     store_token,
     return_token_if_exists,
     delete_token,
+    check_token,
 )
 
 app = Flask(__name__)
@@ -88,6 +89,26 @@ def delete_token_endpoint():
         return response, status_code
     
     return response, status_code
+
+
+@app.route("/check_token", methods=["POST"])
+def check_token_endpoint():
+    access_token = request.json.get("access_token", "")
+    try:
+        user_id = check_token(access_token)
+    except Exception as e:
+        return {
+            "code": 401,
+            "data": {},
+            "errors": [str(e)],
+        }, 401
+    return {
+        "code": 200,
+        "data": {
+            "user_id": user_id,
+        },
+        "errors": [],
+    }, 200
 
 
 if __name__ == '__main__':
