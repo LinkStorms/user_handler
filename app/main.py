@@ -5,7 +5,7 @@ from werkzeug.exceptions import HTTPException
 import requests
 
 from settings import HOST, PORT, ACCESS_TOKEN_BYTE_SIZE
-from communications import login
+from communications import login, register
 from utilities import (
     store_token,
     return_token_if_exists,
@@ -109,6 +109,17 @@ def check_token_endpoint():
         },
         "errors": [],
     }, 200
+
+
+@app.route("/register", methods=["POST"])
+def register_endpoint():
+    username = request.json.get("username", "")
+    password = request.json.get("password", "")
+    email = request.json.get("email", "")
+
+    response = register(username, password, email)
+
+    return response, response["code"]
 
 
 if __name__ == '__main__':
