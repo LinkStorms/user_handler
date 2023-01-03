@@ -1,7 +1,12 @@
-from flask import Flask, json
-from werkzeug.exceptions import HTTPException
+from secrets import token_hex
 
-from settings import HOST, PORT
+from flask import Flask, json, request
+from werkzeug.exceptions import HTTPException
+import requests
+
+from settings import HOST, PORT, ACCESS_TOKEN_BYTE_SIZE
+from communications import login
+from utilities import store_token
 
 app = Flask(__name__)
 
@@ -22,9 +27,33 @@ def handle_exception(e):
     return response
 
 
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
+@app.route("/access_token", methods=["POST"])
+def access_token_endpoint():
+    username = request.json.get("username", "")
+    password = request.json.get("password", "")
+
+    response = login(username, password)
+
+    status_code = response["code"]
+
+    if status_code == 200:
+        user_id = response["data"]["user_id"]
+        
+        access_token = token_hex(ACCESS_TOKEN_BYTE_SIZE)
+        store_token(user_id, access_token)
+        response["data"] = {
+            "user_id": user_id,
+            "access_token": access_token
+        }
+        return response, status_code
+
+    if status_code == 400 or status_code == 404:
+        response["code"] = 401
+        response["errors"] = ["Invalid username or password"]
+        return response, status_code
+    
+    return response, status_code
+
 
 
 if __name__ == '__main__':
