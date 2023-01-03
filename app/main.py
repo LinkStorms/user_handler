@@ -6,7 +6,11 @@ import requests
 
 from settings import HOST, PORT, ACCESS_TOKEN_BYTE_SIZE
 from communications import login
-from utilities import store_token, return_token_if_exists
+from utilities import (
+    store_token,
+    return_token_if_exists,
+    delete_token,
+)
 
 app = Flask(__name__)
 
@@ -60,6 +64,30 @@ def access_token_endpoint():
     
     return response, status_code
 
+
+@app.route("/delete_token", methods=["POST"])
+def delete_token_endpoint():
+    username = request.json.get("username", "")
+    password = request.json.get("password", "")
+
+    response = login(username, password)
+
+    status_code = response["code"]
+
+    if status_code == 200:
+        user_id = response["data"]["user_id"]
+        delete_token(user_id)
+        response["data"] = {
+            "user_id": user_id,
+        }
+        return response, status_code
+
+    if status_code == 400 or status_code == 404:
+        response["code"] = 401
+        response["errors"] = ["Invalid username or password"]
+        return response, status_code
+    
+    return response, status_code
 
 
 if __name__ == '__main__':

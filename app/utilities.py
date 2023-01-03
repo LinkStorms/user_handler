@@ -34,3 +34,10 @@ def return_token_if_exists(user_id, db_path=DB_PATH):
             if db[token].decode("utf-8") == str(user_id):
                 return token.decode("utf-8")
     return None
+
+
+def delete_token(user_id, db_path=DB_PATH):
+    with dbm.open(db_path, "c") as db:
+        for token in db.keys():
+            if db[token].decode("utf-8") == str(user_id):
+                del db[token]
