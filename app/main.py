@@ -132,6 +132,7 @@ def register_endpoint():
 
 
 @app.route("/add_service_token", methods=["POST"])
+@swag_from("flasgger_docs/add_service_token_endpoint.yml")
 def add_service_token_endpoint():
     user_id = request.json.get("user_id", "")
     service_name = request.json.get("service_name", "")
