@@ -2,6 +2,7 @@ from secrets import token_hex
 
 from flask import Flask, json, request
 from werkzeug.exceptions import HTTPException
+from flasgger import Swagger, swag_from
 import requests
 
 from settings import HOST, PORT, ACCESS_TOKEN_BYTE_SIZE
@@ -14,6 +15,8 @@ from utilities import (
 )
 
 app = Flask(__name__)
+
+Swagger(app)
 
 
 @app.errorhandler(HTTPException)
@@ -33,6 +36,7 @@ def handle_exception(e):
 
 
 @app.route("/access_token", methods=["POST"])
+@swag_from("flasgger_docs/access_token_endpoint.yml")
 def access_token_endpoint():
     username = request.json.get("username", "")
     password = request.json.get("password", "")
@@ -41,6 +45,8 @@ def access_token_endpoint():
 
     status_code = response["code"]
 
+    # If the login was successful, an existing token is returned if it exists,
+    # otherwise a new token is created and returned.
     if status_code == 200:
         user_id = response["data"]["user_id"]
         existing_token = return_token_if_exists(user_id)
@@ -61,7 +67,7 @@ def access_token_endpoint():
     if status_code == 400 or status_code == 404:
         response["code"] = 401
         response["errors"] = ["Invalid username or password"]
-        return response, status_code
+        return response, 401
     
     return response, status_code
 
