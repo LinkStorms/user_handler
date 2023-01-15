@@ -73,6 +73,7 @@ def access_token_endpoint():
 
 
 @app.route("/delete_token", methods=["POST"])
+@swag_from("flasgger_docs/delete_token_endpoint.yml")
 def delete_token_endpoint():
     username = request.json.get("username", "")
     password = request.json.get("password", "")
@@ -92,7 +93,7 @@ def delete_token_endpoint():
     if status_code == 400 or status_code == 404:
         response["code"] = 401
         response["errors"] = ["Invalid username or password"]
-        return response, status_code
+        return response, 401
     
     return response, status_code
 
