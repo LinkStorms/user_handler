@@ -120,6 +120,7 @@ def check_token_endpoint():
 
 
 @app.route("/register", methods=["POST"])
+@swag_from("flasgger_docs/register_endpoint.yml")
 def register_endpoint():
     username = request.json.get("username", "")
     password = request.json.get("password", "")
