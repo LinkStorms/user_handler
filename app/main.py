@@ -99,6 +99,7 @@ def delete_token_endpoint():
 
 
 @app.route("/check_token", methods=["POST"])
+@swag_from("flasgger_docs/check_token_endpoint.yml")
 def check_token_endpoint():
     access_token = request.json.get("access_token", "")
     try:

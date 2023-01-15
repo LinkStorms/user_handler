@@ -1,0 +1,69 @@
+Return user id if access token is valid.
+---
+parameters:
+  - in: body
+    name: credentials
+    description: The access token of the user.
+    schema:
+        type: object
+        properties:
+            access_token:
+                type: string
+                description: The access token
+                example: "p2ZbmRosn7Klkbr5ir7c1deQmztlViOipj2q81GB2XcUv9suOG8yp3OspA1b"
+responses:
+    200:
+        description: Successful operation. User id will be returned.
+        schema:
+            properties:
+                code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                data:
+                    type: object
+                    properties:
+                        user_id:
+                            type: integer
+                            description: The id of the user
+                            example: 99
+                errors:
+                    type: array
+                    items:
+                        type: string
+                    description: The errors
+                    example: []
+    401:
+        description: Authentication failed.
+        schema:
+            properties:
+                code:
+                    type: integer
+                    description: The status code
+                    example: 401
+                data:
+                    type: object
+                    example: {}
+                errors:
+                    type: array
+                    items:
+                        type: string
+                    description: The errors
+                    example: ["Invalid access token"]
+    5XX:
+        description: There was an unexpected error processing your request.
+        schema:
+            properties:
+                code:
+                    type: integer
+                    description: The status code
+                    example: 5XX
+                data:
+                    type: object
+                    example: {}
+                errors:
+                    type: array
+                    items:
+                        type: string
+                    description: The errors
+                    example: ["Something went wrong."]
