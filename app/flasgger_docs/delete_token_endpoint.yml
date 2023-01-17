@@ -1,5 +1,7 @@
 Delete access token for the user if username and password is correct.
 ---
+tags:
+  - Token
 parameters:
   - in: body
     name: credentials

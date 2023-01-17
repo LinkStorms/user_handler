@@ -1,5 +1,7 @@
 Registering a new user and returning the user id if the creation was successful.
 ---
+tags:
+  - Registration
 parameters:
   - in: body
     name: user

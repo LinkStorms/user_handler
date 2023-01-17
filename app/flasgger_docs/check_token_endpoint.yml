@@ -1,5 +1,7 @@
 Return user id if access token is valid.
 ---
+tags:
+  - Token
 parameters:
   - in: body
     name: credentials
