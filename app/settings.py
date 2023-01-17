@@ -4,7 +4,7 @@ HOST="localhost"
 PORT="5005"
 
 # env directory is ignored by git
-DB_PATH = "env/tokens"
+DB_PATH = "tokens"
 
 BASE_URL = "http://localhost"
 
