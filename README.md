@@ -5,6 +5,12 @@ requests from users, using the database for saving and validating the token is
 not very efficient. Therefore, a persistent key-value store in this service is
 storing the access token.
 
+## Service Requirements
+This service is using the
+[`linkstorm_datalayer`](https://github.com/LinkStorms/linkstorm_datalayer)
+service. Therefore, you need to run the `linkstorm_datalayer` service before
+running this service.
+
 ## Managing the Environment and Dependencies
 First install `virtualenv` with pip.
 ```bash
