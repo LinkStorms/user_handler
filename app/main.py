@@ -14,9 +14,15 @@ from utilities import (
     check_token,
 )
 
-app = Flask(__name__)
+template = {
+    "info":{
+        "title": "User Handler",
+        "description": "User handler for user register, user login, token validation and token deletion"
+    }
+}
 
-Swagger(app)
+app = Flask(__name__)
+Swagger(app, template=template)
 
 
 @app.errorhandler(HTTPException)
